@@ -1,0 +1,4 @@
+/.doit.db
+/build
+/src_py/hat/sqlite3/_sqlite3.*
+__pycache__
