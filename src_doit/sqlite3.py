@@ -3,7 +3,7 @@ from pathlib import Path
 import sysconfig
 import sys
 
-from hat.doit import common
+from hat.doit.c import CBuild
 
 
 __all__ = ['task_sqlite3',
@@ -80,7 +80,7 @@ def _get_ld_flags():
         raise Exception('unsupported platform')
 
 
-_build = common.CBuild(
+_build = CBuild(
     src_paths=[*(src_c_dir / 'sqlite3').rglob('*.c'),
                *(src_c_dir / 'py/_sqlite3').rglob('*.c')],
     src_dir=src_c_dir,

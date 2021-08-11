@@ -3,6 +3,9 @@ import subprocess
 import sys
 
 from hat.doit import common
+from hat.doit.py import (build_wheel,
+                         run_pytest,
+                         run_flake8)
 
 from .sqlite3 import *  # NOQA
 from . import sqlite3
@@ -30,7 +33,7 @@ def task_build():
     """Build"""
 
     def build():
-        common.wheel_build(
+        build_wheel(
             src_dir=src_py_dir,
             dst_dir=build_dir / 'py',
             src_paths=list(common.path_rglob(src_py_dir,
@@ -49,25 +52,12 @@ def task_build():
 
 def task_check():
     """Check with flake8"""
-    return {'actions': [(_run_flake8, [src_py_dir]),
-                        (_run_flake8, [pytest_dir])]}
+    return {'actions': [(run_flake8, [src_py_dir]),
+                        (run_flake8, [pytest_dir])]}
 
 
 def task_test():
     """Test"""
-
-    def run(args):
-        subprocess.run([sys.executable, '-m', 'pytest',
-                        '-s', '-p', 'no:cacheprovider',
-                        *(args or [])],
-                       cwd=str(pytest_dir),
-                       check=True)
-
-    return {'actions': [run],
+    return {'actions': [lambda args: run_pytest(pytest_dir, *(args or []))],
             'pos_arg': 'args',
             'task_dep': ['sqlite3']}
-
-
-def _run_flake8(path):
-    subprocess.run([sys.executable, '-m', 'flake8', str(path)],
-                   check=True)
