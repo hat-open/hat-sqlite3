@@ -83,7 +83,6 @@ def _get_ld_flags():
 _build = CBuild(
     src_paths=[*(src_c_dir / 'sqlite3').rglob('*.c'),
                *(src_c_dir / 'py/_sqlite3').rglob('*.c')],
-    src_dir=src_c_dir,
     build_dir=build_dir / 'sqlite3',
     cpp_flags=list(_get_cpp_flags()),
     cc_flags=list(_get_cc_flags()),
