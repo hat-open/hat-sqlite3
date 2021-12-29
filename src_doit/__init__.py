@@ -1,6 +1,4 @@
 from pathlib import Path
-import subprocess
-import sys
 
 from hat.doit import common
 from hat.doit.py import (build_wheel,
@@ -22,11 +20,15 @@ build_dir = Path('build')
 src_py_dir = Path('src_py')
 pytest_dir = Path('test_pytest')
 
+build_py_dir = build_dir / 'py' / (f'{common.target_platform.name.lower()}_'
+                                   f'{common.target_py_version.name.lower()}')
+
 
 def task_clean_all():
     """Clean all"""
-    return {'actions': [(common.rm_rf, [build_dir,
-                                        sqlite3.sqlite3_path])]}
+    return {'actions': [(common.rm_rf, [
+        build_dir,
+        *(src_py_dir / 'hat/sqlite3').glob('_sqlite3.*')])]}
 
 
 def task_build():
@@ -35,14 +37,15 @@ def task_build():
     def build():
         build_wheel(
             src_dir=src_py_dir,
-            dst_dir=build_dir / 'py',
+            dst_dir=build_py_dir,
             name='hat-sqlite3',
             description='Hat Sqlite3 build',
             url='https://github.com/hat-open/hat-sqlite3',
             license=common.License.APACHE2,
             packages=['hat'],
             requirements_path=None,
-            platform_specific=True)
+            py_versions=[common.target_py_version],
+            platform=common.target_platform)
 
     return {'actions': [build],
             'task_dep': ['sqlite3']}
