@@ -20,8 +20,7 @@ build_dir = Path('build')
 src_py_dir = Path('src_py')
 pytest_dir = Path('test_pytest')
 
-build_py_dir = build_dir / 'py' / (f'{common.target_platform.name.lower()}_'
-                                   f'{common.target_py_version.name.lower()}')
+build_py_dir = build_dir / 'py'
 
 
 def task_clean_all():
