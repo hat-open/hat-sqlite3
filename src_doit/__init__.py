@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from hat.doit import common
-from hat.doit.py import (build_wheel,
+from hat.doit.py import (get_py_versions,
+                         build_wheel,
                          run_pytest,
                          run_flake8)
 
@@ -41,10 +42,9 @@ def task_build():
             description='Hat Sqlite3 build',
             url='https://github.com/hat-open/hat-sqlite3',
             license=common.License.APACHE2,
-            packages=['hat'],
-            requirements_path=None,
-            py_versions=[common.target_py_version],
-            platform=common.target_platform)
+            py_versions=get_py_versions(None),
+            platform=common.target_platform,
+            has_ext_modules=True)
 
     return {'actions': [build],
             'task_dep': ['sqlite3']}

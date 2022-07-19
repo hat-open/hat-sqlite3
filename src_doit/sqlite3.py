@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from hat.doit import common
-from hat.doit.c import (target_ext_suffix,
+from hat.doit.c import (get_target_ext_suffix,
                         get_py_cpp_flags,
                         get_py_ld_flags,
                         CBuild)
@@ -17,6 +17,7 @@ build_dir = Path('build')
 src_c_dir = Path('src_c')
 src_py_dir = Path('src_py')
 
+target_ext_suffix = get_target_ext_suffix(None)
 sqlite3_path = src_py_dir / f'hat/sqlite3/_sqlite3{target_ext_suffix}'
 
 
@@ -48,7 +49,7 @@ def _cleanup():
 
 
 def _get_cpp_flags():
-    yield from get_py_cpp_flags()
+    yield from get_py_cpp_flags(None)
     yield '-DMODULE_NAME="_sqlite3"'
     yield f"-I{src_c_dir / 'sqlite3'}"
 
@@ -60,7 +61,7 @@ def _get_cc_flags():
 
 
 def _get_ld_flags():
-    yield from get_py_ld_flags()
+    yield from get_py_ld_flags(None)
 
 
 _build = CBuild(
